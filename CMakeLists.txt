@@ -4,9 +4,7 @@ project(Ninja_C C)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-set(SOURCES
-    src/main.c
-)
+file(GLOB SOURCES "src/*.c")
 
 add_executable(main ${SOURCES})
 

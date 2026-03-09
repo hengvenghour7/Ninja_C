@@ -1,35 +1,34 @@
+#include "globalVar.h"
 #include "stdio.h"
 #include "raylib.h"
+#include "character.h"
 #include "game.h"
 
 int main(void)
 {
-    // Initialization
-    const int screenWidth = 800;
-    const int screenHeight = 600;
 
-    InitWindow(screenWidth, screenHeight, "MyGame - Raylib Startup");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "MyGame - Raylib Startup");
 
-    // Set target FPS
+    Character enemies[5];
+    enemies[2] = createCharacter((Vector2){200, 500}, 5, 2);
+    Character player = createCharacter((Vector2){200, 200}, 5, 2);
     SetTargetFPS(60);
 
-    // Game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        // Update
-        // TODO: Add game logic here
-
-        printTest();
         BeginDrawing();
 
         ClearBackground(RAYWHITE);
 
         DrawText("Hello, Raylib!", 190, 200, 40, LIGHTGRAY);
+        drawPlayer(&player);
+        drawPlayer(&enemies[2]);
+        updatePlayerPos(&player);
+        updatePlayerPos(&enemies[2]);
         EndDrawing();
     }
 
-    // De-Initialization
-    CloseWindow();        // Close window and OpenGL context
+    CloseWindow();
 
     return 0;
 }
