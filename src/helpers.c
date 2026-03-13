@@ -17,3 +17,7 @@ char *loadFile(const char *filePath)
     fclose(f);
     return buffer;
 }
+int *getArrayFromJson(cJSON j)
+{
+    return 0;
+}

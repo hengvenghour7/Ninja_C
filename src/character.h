@@ -4,14 +4,26 @@
 #include <raylib.h>
 #include <stdio.h>
 
-typedef enum DirectionState {
+typedef enum DirectionState
+{
     Left,
     Right,
     Up,
     Down
 } DirectionState;
+typedef enum CharacterState
+{
+    Idling,
+    Walking,
+    Running,
+    Attacking,
+    TakingDamage
+} CharacterState;
 typedef struct Character {
-    Texture2D characterTexture;
+    Texture2D walkTexture;
+    Texture2D idleTexture;
+    Texture2D attackTexture;
+    Texture2D *characterTexture;
     Vector2 mapPos;
     Vector2 screenPos;
     int currentFrame;
@@ -21,13 +33,17 @@ typedef struct Character {
     int speed;
     Vector2 direction;
     float updateAnimationTime;
+    DirectionState directionState;
 } Character;
 Character createCharacter (const char *texturePath ,Vector2 mapPos, int maxFrame, int speed);
 void drawPlayer (Character *player);
 void updatePlayerPos (Character *player);
 void updateCharacterAnimation (Character *player, float deltaTime);
+void updateCharacterState (Character *player);
 void playerTick (float deltaTime);
+void changeCharacterTexture (Character *character, CharacterState state);
 
 void drawAIPlayer (Vector2 mapPos, Character character);
+void appraochCharacter (Character *AIPlayer, Character *player);
 
 #endif
