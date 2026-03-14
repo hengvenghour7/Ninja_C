@@ -34,6 +34,7 @@ typedef struct Character {
     Vector2 direction;
     float updateAnimationTime;
     DirectionState directionState;
+    CharacterState characterState;
 } Character;
 Character createCharacter (const char *texturePath ,Vector2 mapPos, int maxFrame, int speed);
 void drawPlayer (Character *player);

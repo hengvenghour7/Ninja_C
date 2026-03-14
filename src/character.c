@@ -13,10 +13,7 @@ void drawPlayer (Character *player)
 }
 void updatePlayerPos (Character *player)
 {
-    if (IsKeyPressed(KEY_O))
-    {
-        changeCharacterTexture(player, Idling);
-    }
+    player->direction = (Vector2){0, 0};
     if (IsKeyDown(KEY_A)) {
         player->direction.x = -1;
     }
@@ -29,9 +26,9 @@ void updatePlayerPos (Character *player)
     if (IsKeyDown(KEY_S)) {
         player->direction.y = 1;
     }
-    player->direction = Vector2Scale(Vector2Normalize(player->direction), player->speed); 
+    player->direction = Vector2Scale(Vector2Normalize(player->direction), player->speed);
+    
     player->mapPos = Vector2Add(player->mapPos, player->direction);
-    player->direction = (Vector2){0, 0};
 }
 Character createCharacter (const char *texturePath ,Vector2 mapPos, int maxFrame, int speed)
 {
@@ -59,7 +56,6 @@ Character createCharacter (const char *texturePath ,Vector2 mapPos, int maxFrame
         .walkTexture = LoadTexture(walkTexturePath),
         .idleTexture = LoadTexture(idleTexturePath),
         .attackTexture = LoadTexture(attackTexturePath),
-        .characterTexture = &character.walkTexture,
         .mapPos = mapPos,
         .currentFrame = 3,
         .currentRow = 0,
@@ -68,8 +64,11 @@ Character createCharacter (const char *texturePath ,Vector2 mapPos, int maxFrame
         .speed = speed,
         .screenPos = {0 ,0},
         .maxFrame = maxFrame,
-        .updateAnimationTime = 0
+        .updateAnimationTime = 0,
+        .characterState = Walking,
     };
+
+    character.characterTexture = &character.walkTexture;
     free(walkTexturePath);
     free(idleTexturePath);
     free(attackTexturePath);
@@ -77,6 +76,13 @@ Character createCharacter (const char *texturePath ,Vector2 mapPos, int maxFrame
 }
 void updateCharacterAnimation (Character *player, float deltaTime)
 {
+    if (player->direction.x == 0 && player->direction.y == 0)
+    {
+        changeCharacterTexture(player, Idling);
+    }
+    else{
+        changeCharacterTexture(player, Walking);
+    }
     if (player->updateAnimationTime > 0.2)
     {
         player->updateAnimationTime = 0;
@@ -90,6 +96,14 @@ void updateCharacterAnimation (Character *player, float deltaTime)
 }
 void changeCharacterTexture (Character *character, CharacterState state)
 {
+    if (character->characterState == state)
+    {
+        return;
+    }
+    else
+    {
+        character->characterState = state;
+    }
     switch (state)
     {
     case Attacking:
@@ -108,6 +122,6 @@ void changeCharacterTexture (Character *character, CharacterState state)
 }
 void appraochCharacter (Character *AIPlayer, Character *player)
 {
-    Vector2 direction = Vector2Normalize(Vector2Subtract(player->mapPos, AIPlayer->mapPos));
-    AIPlayer->mapPos = Vector2Add(AIPlayer->mapPos, Vector2Scale(direction, AIPlayer->speed));
+    AIPlayer->direction = Vector2Normalize(Vector2Subtract(player->mapPos, AIPlayer->mapPos));
+    AIPlayer->mapPos = Vector2Add(AIPlayer->mapPos, Vector2Scale(AIPlayer->direction, AIPlayer->speed));
 }

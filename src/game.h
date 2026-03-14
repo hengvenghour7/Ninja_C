@@ -1,6 +1,8 @@
 #include <raylib.h>
 #include <stdio.h>
 
-void printTest() {
-    printf("kitting");
-}
+typedef struct Game {
+    bool isGameOver;
+} Game;
+
+Game createGame();
